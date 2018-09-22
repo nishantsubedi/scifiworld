@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scifiworld/pages/movie/scifiMoviesListPage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -23,6 +24,11 @@ class _HomePageState extends State<HomePage> {
               child: ListTile(
                 leading: Icon(Icons.theaters, color: Colors.white, size: 30.0,),
                 title: Text('Movies', style: TextStyle(color: Colors.white, fontSize: 18.0),),
+                onTap: (){
+                   Navigator.push(context, MaterialPageRoute(builder: (_) {
+                        return ScifiMovieListPage();
+                      }));
+                },
               ),
             ),
             Container(
