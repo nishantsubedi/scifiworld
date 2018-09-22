@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:scifiworld/pages/dashboard/dashboard.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -14,15 +15,9 @@ class _HomePage extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        _backButtonClicked();
-      },
-      child: Scaffold(
-        key: _scaffoldKey,
-        // appBar: AppBar(),
-        body: _buildHomeStack(),
-      ),
+    return Scaffold(
+      key: _scaffoldKey,
+      body: _buildHomeStack(),
     );
   }
 
@@ -42,49 +37,21 @@ class _HomePage extends State<HomePage> {
           left: MediaQuery.of(context).size.width * 0.4,
           child: Container(
             child: RaisedButton(
-              child: Text('Get Started', style: TextStyle(color:Colors.blueGrey.shade700),),
+              child: Text(
+                'Get Started',
+                style: TextStyle(color: Colors.blueGrey.shade700),
+              ),
               splashColor: Colors.blueGrey.shade200,
-              onPressed: (){},
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (_) {
+                  return Dashboard();
+                }));
+              },
             ),
           ),
         )
       ],
-    );
-  }
-
-  Future<Null> _backButtonClicked() async {
-    return showDialog<Null>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return new AlertDialog(
-          title: new Text(
-            'Confirmation',
-            style: TextStyle(color: Theme.of(context).primaryColor),
-          ),
-          content: new SingleChildScrollView(
-            child: new ListBody(
-              children: <Widget>[
-                new Text('Are you sure to exit the application?'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text('Okay'),
-              onPressed: () {
-                exit(0);
-              },
-            ),
-            new FlatButton(
-              child: new Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }
