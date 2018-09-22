@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scifiworld/pages/homepage/homepage.dart';
+import 'package:scifiworld/pages/welcome/welcomePage.dart';
 
 void main() => runApp(new MyApp());
 
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      home: WelcomePage(),
     );
   }
 }

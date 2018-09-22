@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:scifiworld/pages/dashboard/widgets/navigationBar.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -17,7 +18,18 @@ class _DashboardState extends State<Dashboard> {
       onWillPop: () {
         _backButtonClicked();
       },
-      child: Scaffold(body: Text('Dashboard')),
+      child: Scaffold(
+        body:  Container(
+          padding: EdgeInsets.only(top:24.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                NavigationBar()
+              ],
+            ),
+          )
+        )
+      ),
     );
   }
 

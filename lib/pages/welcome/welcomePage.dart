@@ -1,16 +1,13 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:scifiworld/pages/dashboard/dashboard.dart';
 
-class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
+class WelcomePage extends StatefulWidget {
+  WelcomePage({Key key}) : super(key: key);
   @override
-  State<StatefulWidget> createState() => _HomePage();
+  State<StatefulWidget> createState() => _WelcomePageState();
 }
 
-class _HomePage extends State<HomePage> {
+class _WelcomePageState extends State<WelcomePage> {
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
 
   @override
