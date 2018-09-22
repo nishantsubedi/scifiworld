@@ -20,7 +20,7 @@ class _ScifiMovieListPageState extends State<ScifiMovieListPage> {
   bool _isPerformingRequest = false;
   int page = 1;
   bool _endofMovies = false;
-
+  String sortBy = '';
   @override
   void initState() {
     _scrollController.addListener(() {
@@ -66,8 +66,32 @@ class _ScifiMovieListPageState extends State<ScifiMovieListPage> {
                 'Sort By',
                 style: TextStyle(color: Colors.white),
               ),
-              onPressed: () {},
-            )
+              onPressed: () {
+                showModalBottomSheet<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return new Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          new ListTile(
+                              leading: new Icon(Icons.calendar_today),
+                              title: new Text('Release Date'),
+                              onTap: () {}),
+                          new ListTile(
+                            leading: new Icon(Icons.star),
+                            title: new Text('Rating'),
+                            onTap: () {},
+                          ),
+                          new ListTile(
+                            leading: new Icon(Icons.favorite),
+                            title: new Text('Populaity'),
+                            onTap: () => {},
+                          ),
+                        ],
+                      );
+                    });
+              },
+            ),
           ],
         ),
         body: _buildMoviesList(context));
@@ -172,8 +196,8 @@ class _ScifiMovieListPageState extends State<ScifiMovieListPage> {
                           Row(
                             children: <Widget>[
                               Icon(
-                                Icons.hd,
-                                color: Colors.yellow.shade800,
+                                Icons.favorite_border,
+                                color: Theme.of(context).primaryColor,
                               ),
                               SizedBox(
                                 width: 5.0,
@@ -197,47 +221,5 @@ class _ScifiMovieListPageState extends State<ScifiMovieListPage> {
         controller: _scrollController,
       );
     }
-  }
-
-  Future<Null> _backButtonClicked() async {
-    return showDialog<Null>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return new AlertDialog(
-          content: new SingleChildScrollView(
-            child: new ListBody(
-              children: <Widget>[
-                new Text('Are you sure to exit the application?'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text(
-                'Okay',
-                style: TextStyle(
-                  color: Theme.of(context).primaryColorDark,
-                ),
-              ),
-              onPressed: () {
-                exit(0);
-              },
-            ),
-            new FlatButton(
-              child: new Text(
-                'Cancel',
-                style: TextStyle(
-                  color: Theme.of(context).primaryColorDark,
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 }
