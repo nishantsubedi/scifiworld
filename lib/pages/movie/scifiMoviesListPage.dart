@@ -3,8 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:scifiworld/services/movieService.dart';
 import 'package:scifiworld/models/movie/scifiMovieResult.dart';
 import 'package:intl/intl.dart';
-import 'dart:io';
-import 'dart:async';
 
 class ScifiMovieListPage extends StatefulWidget {
   @override
@@ -20,7 +18,8 @@ class _ScifiMovieListPageState extends State<ScifiMovieListPage> {
   bool _isPerformingRequest = false;
   int page = 1;
   bool _endofMovies = false;
-  String sortBy = '';
+  String _sortBy = 'popularity.desc';
+
   @override
   void initState() {
     _scrollController.addListener(() {
@@ -43,7 +42,7 @@ class _ScifiMovieListPageState extends State<ScifiMovieListPage> {
       setState(() => _isPerformingRequest = true);
       page += 1;
       List<ScifiMovieResult> newMovies =
-          await MovieService.get().fetchScifiMovie(page);
+          await MovieService.get().fetchScifiMovie(page, _sortBy);
       if (newMovies.isEmpty) {
         _endofMovies = true;
       }
@@ -62,10 +61,7 @@ class _ScifiMovieListPageState extends State<ScifiMovieListPage> {
           backgroundColor: Theme.of(context).primaryColorDark,
           actions: <Widget>[
             FlatButton(
-              child: Text(
-                'Sort By',
-                style: TextStyle(color: Colors.white),
-              ),
+              child: Icon(Icons.sort, color: Colors.white,), 
               onPressed: () {
                 showModalBottomSheet<void>(
                     context: context,
@@ -76,16 +72,34 @@ class _ScifiMovieListPageState extends State<ScifiMovieListPage> {
                           new ListTile(
                               leading: new Icon(Icons.calendar_today),
                               title: new Text('Release Date'),
-                              onTap: () {}),
+                              onTap: () {
+                                setState(() {
+                                  _sortBy = 'release_date.desc';
+                                  _scifiMovieList = null;
+                                  Navigator.pop(context);
+                                });
+                              }),
                           new ListTile(
                             leading: new Icon(Icons.star),
-                            title: new Text('Rating'),
-                            onTap: () {},
+                            title: new Text('Revenue'),
+                            onTap: () {
+                              setState(() {
+                                _sortBy = 'revenue.desc';
+                                _scifiMovieList = null;
+                                Navigator.pop(context);
+                              });
+                            },
                           ),
                           new ListTile(
                             leading: new Icon(Icons.favorite),
                             title: new Text('Populaity'),
-                            onTap: () => {},
+                            onTap: () {
+                              setState(() {
+                                _sortBy = 'popularity.desc';
+                                _scifiMovieList = null;
+                                Navigator.pop(context);
+                              });
+                            },
                           ),
                         ],
                       );
@@ -99,7 +113,7 @@ class _ScifiMovieListPageState extends State<ScifiMovieListPage> {
 
   Widget _buildMoviesList(BuildContext context) {
     if (_scifiMovieList == null) {
-      MovieService.get().fetchScifiMovie(page).then((list) {
+      MovieService.get().fetchScifiMovie(page, _sortBy).then((list) {
         setState(() {
           _scifiMovieList = list;
         });
@@ -131,7 +145,6 @@ class _ScifiMovieListPageState extends State<ScifiMovieListPage> {
           if (_scifiMovieList.length == index && _endofMovies == false) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
-              // margin: EdgeInsets.only(left: 50.0, right: 50.0),
               child: Center(child: CircularProgressIndicator()),
             );
           } else {
@@ -186,8 +199,11 @@ class _ScifiMovieListPageState extends State<ScifiMovieListPage> {
                               SizedBox(
                                 width: 5.0,
                               ),
-                              Text(
-                                  _scifiMovieList[index].voteAverage.toString())
+                              Text(_scifiMovieList[index].voteAverage == null
+                                  ? '0'
+                                  : _scifiMovieList[index]
+                                      .voteAverage
+                                      .toString())
                             ],
                           ),
                           SizedBox(
@@ -202,7 +218,11 @@ class _ScifiMovieListPageState extends State<ScifiMovieListPage> {
                               SizedBox(
                                 width: 5.0,
                               ),
-                              Text(_scifiMovieList[index].popularity.toString())
+                              Text(_scifiMovieList[index].popularity == null
+                                  ? '0'
+                                  : _scifiMovieList[index]
+                                      .popularity
+                                      .toString())
                             ],
                           ),
                         ],

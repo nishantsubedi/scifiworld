@@ -24,45 +24,24 @@ class MovieService {
     return await _init();
   }
 
-  Future<List<ScifiMovieResult>> fetchScifiMovie(int page) async {
+  Future<List<ScifiMovieResult>> fetchScifiMovie(
+      int page, String sortBy) async {
     String url = AppConfiguration.BASE_API_URL +
         "discover/movie?api_key=" +
         AppConfiguration.API_KEY +
-        "&sort_by=popularity.desc&page=$page&with_genres=878";
+        "&sort_by=" + sortBy + "&page=$page&with_genres=878";
+
+    // "&sort_by=popularity.desc&page=$page&with_genres=878";
     var response = await dio.get(url);
-    if(response.statusCode == 200){
-       ApiResponse apiResponse = ApiResponse.fromJson(response.data);
-      List<ScifiMovieResult> scifiMovieList = _createScifiMoviesList(apiResponse);
+    if (response.statusCode == 200) {
+      ApiResponse apiResponse = ApiResponse.fromJson(response.data);
+      List<ScifiMovieResult> scifiMovieList =
+          _createScifiMoviesList(apiResponse);
       return scifiMovieList;
     } else {
       throw Exception('Cannot get movies list at this time!');
     }
   }
-  // Future<FrontPageVM> fetchFrontPageData() async {
-  //   String url = AppConfiguration.BASE_API_URL + "front";
-  //   FrontPageVM pageVM = new FrontPageVM();
-
-  //   var response = await dio.get(url);
-  //   if (response.statusCode == 200) {
-  //     ApiResponse apiResponse = ApiResponse.fromJson(response.data);
-  //     pageVM = FrontPageVM.fromJson(apiResponse.result);
-  //     return pageVM;
-  //   } else {
-  //     throw Exception('Cannot get Front Page data at this time!');
-  //   }
-  // }
-
-  // Future<List<News>> fetchNewsList(int page) async {
-  //   String url = AppConfiguration.BASE_API_URL + "news?page=$page";
-  //   var response = await dio.get(url);
-  //   if (response.statusCode == 200) {
-  //     ApiResponse apiResponse = ApiResponse.fromJson(response.data);
-  //     List<News> newsList = _createnewsList(apiResponse);
-  //     return newsList;
-  //   } else {
-  //     throw Exception('Cannot get news list at this time!');
-  //   }
-  // }
 
   List<ScifiMovieResult> _createScifiMoviesList(ApiResponse data) {
     List<ScifiMovieResult> news = new List();
@@ -72,5 +51,4 @@ class MovieService {
     }
     return news;
   }
-
 }
