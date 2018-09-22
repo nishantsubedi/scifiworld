@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:scifiworld/pages/homepage/homePage.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -11,7 +12,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  String activeButton;
+  int activeButton = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -38,14 +39,14 @@ class _DashboardState extends State<Dashboard> {
                           IconButton(
                             icon: Icon(
                               Icons.home,
-                              color: activeButton == 'home'
+                              color: activeButton == 1
                                   ? Colors.white
                                   : Colors.white70,
                             ),
                             iconSize: 40.0,
-                            onPressed: (){
+                            onPressed: () {
                               setState(() {
-                                activeButton = 'home';
+                                activeButton = 1;
                               });
                             },
                           ),
@@ -53,36 +54,37 @@ class _DashboardState extends State<Dashboard> {
                             width: 5.0,
                           ),
                           FlatButton(
-                              child: Opacity(
-                            opacity: 0.9,
-                            child: Image.asset(
-                              "images/news_icon.png",
-                              color: activeButton == 'news'
-                                  ? Colors.white
-                                  : Colors.white70,
-                              height: 40.0,
-                              width: 40.0,
+                            child: Opacity(
+                              opacity: 0.9,
+                              child: Image.asset(
+                                "images/news_icon.png",
+                                color: activeButton == 2
+                                    ? Colors.white
+                                    : Colors.white70,
+                                height: 40.0,
+                                width: 40.0,
+                              ),
                             ),
-                          ),
-                          onPressed: (){
-                            setState(() {
-                                activeButton = 'news';
+                            onPressed: () {
+                              setState(() {
+                                activeButton = 2;
                               });
-                          },),
+                            },
+                          ),
                           SizedBox(
                             width: 5.0,
                           ),
                           IconButton(
                             icon: Icon(
                               Icons.notifications,
-                              color: activeButton == 'notification'
+                              color: activeButton == 3
                                   ? Colors.white
                                   : Colors.white70,
                             ),
                             iconSize: 40.0,
-                            onPressed: (){
+                            onPressed: () {
                               setState(() {
-                                activeButton = 'notification';
+                                activeButton = 3;
                               });
                             },
                           ),
@@ -92,14 +94,14 @@ class _DashboardState extends State<Dashboard> {
                           IconButton(
                             icon: Icon(
                               Icons.dehaze,
-                              color: activeButton == 'control'
+                              color: activeButton == 4
                                   ? Colors.white
                                   : Colors.white70,
                             ),
                             iconSize: 40.0,
                             onPressed: () {
                               setState(() {
-                                activeButton = 'control';
+                                activeButton = 4;
                               });
                             },
                           ),
@@ -108,11 +110,19 @@ class _DashboardState extends State<Dashboard> {
                           ),
                         ],
                       ),
-                    )
+                    ),
+                    SingleChildScrollView(
+                      child: _buildBody(context, activeButton),
+                    ),
                   ],
                 ),
               ))),
     );
+  }
+
+  Widget _buildBody(BuildContext context, int activeButton) {
+    if(activeButton == 1) return HomePage();
+    return Text(activeButton.toString());
   }
 
   Future<Null> _backButtonClicked() async {

@@ -1,19 +1,19 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:scifiworld/pages/dashboard/dashboard.dart';
+import 'package:scifiworld/services/preferenceService.dart';
 
 class WelcomePage extends StatefulWidget {
-  WelcomePage({Key key}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _WelcomePageState();
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
+  int isVisited = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       body: _buildHomeStack(),
     );
   }
@@ -29,26 +29,52 @@ class _WelcomePageState extends State<WelcomePage> {
             fit: BoxFit.cover,
           ),
         ),
-        Positioned(
-          bottom: MediaQuery.of(context).size.height * 0.2,
-          left: MediaQuery.of(context).size.width * 0.4,
-          child: Container(
-            child: RaisedButton(
-              child: Text(
-                'Get Started',
-                style: TextStyle(color: Colors.blueGrey.shade700),
-              ),
-              splashColor: Colors.blueGrey.shade200,
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (_) {
-                  return Dashboard();
-                }));
-              },
-            ),
-          ),
-        )
+        _buildGetStartedButton(context)
       ],
     );
+  }
+
+  Widget _buildGetStartedButton(BuildContext context) {
+    if (isVisited == 0) {
+      PreferenceService.get().getVisited().then((val) {
+        if (val) {
+          setState(() {
+            isVisited = 1;
+          });
+        } else {
+          isVisited = 2;
+        }
+      });
+      return Container();
+    } else if (isVisited == 1) {
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.pop(context);
+        Navigator.push(context, MaterialPageRoute(builder: (_) {
+          return Dashboard();
+        }));
+      });
+      return Container();
+    } else {
+      return Positioned(
+        bottom: MediaQuery.of(context).size.height * 0.2,
+        left: MediaQuery.of(context).size.width * 0.4,
+        child: Container(
+          child: RaisedButton(
+            child: Text(
+              'Get Started',
+              style: TextStyle(color: Colors.blueGrey.shade700),
+            ),
+            splashColor: Colors.blueGrey.shade200,
+            onPressed: () {
+              PreferenceService.get().setVisited(true);
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return Dashboard();
+              }));
+            },
+          ),
+        ),
+      );
+    }
   }
 }
